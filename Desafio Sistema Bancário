@@ -1,0 +1,66 @@
+## Projeto de um Sistema Bancário Simples   
+
+menu = """
+
+[d] = Depositar
+[s] = Sacar
+[e] = Extrato
+[q] = Sair
+
+=: """
+
+saldo = 0
+limite = 500
+extrato = ""
+numeros_saques = 0
+limites_saques = 3
+
+while 1:
+
+    opcao = input(menu)
+
+    if opcao == "d":
+        valor = float(input("Digite o valor desejado para depósito: "))
+
+        if valor >0:
+            saldo += valor
+            extrato += f" Valor Depositado: R$:{valor: .2f} \n"
+            print(f"\n Seu Saldo atual é de : R${valor:.2f}")
+        else:
+            print("\n O Valor informado é inválido, Digite um  novo valor!  ")
+
+    elif opcao == "s":
+       valor = float(input("Digite o valor desejado para Saque: "))
+
+       Limite_excedido_do_saque = valor > saldo
+       excedeu_limite = valor > limite
+       quantidade_de_saques = numeros_saques >= limites_saques
+
+       if Limite_excedido_do_saque:
+           print("\n  Saldo insuficiente ")
+
+       elif excedeu_limite:
+           print(" Operação Negada, O Valor do saque excede o Limite de saque em sua conta! ")
+
+       elif quantidade_de_saques:
+           print("\n Operação negada,Você  pode Realizar apenas '3' saques diarios ")
+
+       elif valor > 0:
+            saldo -= valor
+            extrato += f" Valor : R$:{valor: .2f} \n"
+            numeros_saques += 1
+            print("\n O Saque foi Realizado com sucesso, obrigado por utilizar nosso banco!") ##testa se estamos digitando valores negativos
+       else:
+            print("\n Operação falhou o valor informado é invalido!")
+
+    elif opcao == "e":
+        print("\n ------------ Extrato ---------------- ")
+        print("\n Não foram realizadas movimentações."if not extrato else extrato)
+        print(f"\n Seu Saldo atual é de: R$ {saldo:.2f}")
+        print("\n ------------------------------------- ")
+
+    elif opcao == "q":
+        break
+
+    else:
+        print (" Opção inválida, Por favor selecione novamente a opção desejada! ")
