@@ -1,0 +1,147 @@
+def menu ():
+    menu = """\n
+    =============== MENU ============
+[d] = Depositar
+[s] = Sacar
+[e] = Extrato
+[NC]= Nova Conta
+[NU]= novo usuario
+[lc]= Listar Contas
+[q] = Sair
+    ="""
+    return input (menu)
+
+def depositar (saldo,valor,extrato, /):
+       if valor >0:
+            saldo += valor
+            extrato += f" Valor Depositado: R$:{valor: .2f} \n"
+            print(f"\n Valor depositado com sucesso seu Saldo atual é de : R${valor:.2f}")
+       else:
+            print("\n O Valor informado é inválido, Por favor Digite um  novo valor!  ")
+
+       return saldo , extrato
+
+def sacar (*, saldo, valor,extrato,limite,numeros_saques,limites_saques):
+       Limite_excedido_do_saque = valor > saldo
+       excedeu_limite = valor > limite
+       quantidade_de_saques = numeros_saques >= limites_saques
+
+       if Limite_excedido_do_saque:
+           print("\n  Saldo insuficiente ")
+
+       elif excedeu_limite:
+           print(" Operação Negada, O Valor do saque excede o Limite de saque em sua conta! ")
+
+       elif quantidade_de_saques:
+           print("\n Operação negada,Você  pode Realizar apenas '3' saques diarios ")
+
+       elif valor > 0:
+            saldo -= valor
+            extrato += f" Valor : R$:{valor: .2f} \n"
+            numeros_saques += 1
+            print("\n O Saque foi Realizado com sucesso, obrigado por utilizar o banco black!") ##testa se estamos digitando valores negativos
+       else:
+            print("\n Operação falhou o valor informado é invalido!")
+
+       return saldo,extrato
+
+def exibir_extrato (saldo, /, *, extrato):
+       print("\n ------------ Extrato ---------------- ")
+       print("\n Não foram realizadas movimentações."if not extrato else extrato)
+       print(f"\n Olá Seu Saldo atual é de: R$ {saldo:.2f}")
+       print("\n ------------------------------------- ")
+
+def nova_conta (agencia,numero_conta,usuarios):
+    cpf= input("\n Informe o CPF do Usuário:      ")
+    usuarios= filtrar_usuario(cpf,usuarios)
+
+    if usuarios:
+        print("\n Sua conta Black foi criada com sucesso! ")
+        return{"agencia": agencia,"numero_conta":numero_conta,"usuarios":usuarios}
+
+print("\n Desculpe usuario não encontrado, a sua conta não poderá ser criada")
+
+def criar_usuario(usuarios):
+    cpf = input("Informe seu cpf:   " )
+    usuarios = filtrar_usuario(cpf, usuarios)
+
+    if usuarios:
+       print("\n Já existe um usuario cadastrado para esse CPF")
+       return
+
+    nome = input("\n Informe seu nome completo:      ")
+    data_de_nascimento = input("\n Informe a sua data de nascimento (aa-bb-cccc)::     ")
+    endereco = input ("\n Informe seu endereço completo (Rua, Cidade,Estado):     ")
+
+    usuarios.append({"nome":nome , "data_de_nascimento": data_de_nascimento, "cpf":cpf, "endereco":endereco})
+
+    print ("\n Parabéns você agora faz parte da Familia black, Seu Cadastro  foi realizado com sucesso:")
+
+def filtrar_usuario (cpf, usuarios):
+    usuarios_filtrados = [usuarios for usuarios in usuarios if usuarios["cpf"] == cpf]
+    return usuarios_filtrados[0] if usuarios_filtrados else None
+
+def listar_contas(contas):
+    for contas in contas:
+        linhas = f"""\
+             Agência:{conta['agência']}
+             C/C: {conta['numero_conta']}
+             Titular: {conta['usuarios']['nome']}
+        """
+        print("a" == 100)
+        print(linhas)
+
+def main ():
+
+ 
+limite = 900
+extrato = ""
+numeros_saques = 0
+limites_saques = 3
+usuarios = []
+contas = []
+agencia="001"
+saldo = 0
+
+while 1:
+
+        opcao = menu()
+
+        if opcao == "d":
+            valor = float(input("Bem vindo ao Black bank digital, digite o valor desejado para depósito: "))
+
+            saldo, extrato = depositar(saldo,valor,extrato)
+
+        elif opcao == "s":
+            valor = float(input("Digite o valor desejado para Saque: "))
+
+            saldo, extrato = sacar(
+                saldo = saldo,
+                valor= valor,
+                extrato = extrato,
+                limite = limite,
+                numeros_saques = numeros_saques,
+                limites_saques = limites_saques,
+             )
+
+        elif opcao == "e":
+             exibir_extrato(saldo, extrato = extrato)
+
+        elif opcao == "nu":
+             criar_usuario (usuarios)
+
+        elif opcao == "nc":
+             numero_conta = len(contas) + 1
+             contas = nova_conta(agencia, numero_conta, usuarios)
+
+        if contas:
+              contas.append(conta)
+
+        elif opcao == "lc":
+             listar_contas(contas)
+
+        elif opcao == "q":
+            break
+
+else:
+    print (" Opção inválida, Por favor selecione novamente a opção desejada! ")
