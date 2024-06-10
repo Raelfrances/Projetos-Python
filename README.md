@@ -4,4 +4,4 @@
 
 - comando git push
 - comando Git pull
-- Comando Git fatm
+- Comando Git fetch
