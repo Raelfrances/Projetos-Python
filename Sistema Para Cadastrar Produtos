@@ -1,0 +1,79 @@
+from tkinter import * from tkinter import ttk
+
+Criando a janela principal
+root = Tk() root.title("Cadastro e Listagem de Produtos")
+
+Função para cadastrar um novo produto
+def cadastrar_produto():
+
+nome_produto = nome_produto_entry.get()
+descricao_produto = descricao_produto_entry.get("1.0", END)
+valor_produto = valor_produto_entry.get()
+disponivel_venda = disponivel_venda_combobox.get()
+# Validar os valores dos campos de entrada
+if not nome_produto:
+    mensagem_erro_label.config(text="Nome do produto é obrigatório")
+    return
+if not descricao_produto:
+    mensagem_erro_label.config(text="Descrição do produto é obrigatória")
+    return
+if not valor_produto:
+    mensagem_erro_label.config(text="Valor do produto é obrigatório")
+    return
+try:
+    valor_produto = float(valor_produto)
+except ValueError:
+    mensagem_erro_label.config(text="Valor do produto deve ser um número")
+    return
+# Criando um novo produto
+novo_produto = {
+    "nome": nome_produto,
+    "descricao": descricao_produto,
+    "valor": valor_produto,
+    "disponivel_venda": disponivel_venda,
+}
+# Adicionando o novo produto à lista de produtos
+produtos.append(novo_produto)
+# Atualizar a listagem de produtos
+atualizar_listagem_produtos()
+# Limpar os campos de entrada
+nome_produto_entry.delete(0, END)
+descricao_produto_entry.delete("1.0", END)
+valor_produto_entry.delete(0, END)
+disponivel_venda_combobox.set("Selecione")
+# Exibir mensagem de sucesso
+mensagem_sucesso_label.config(text="Produto cadastrado com sucesso!")
+Função para atualizar a listagem de produtos
+def atualizar_listagem_produtos():
+
+listagem_produtos_treeview.delete(*listagem_produtos_treeview.get_children())
+# Ordenar a lista de produtos por valor
+produtos_ordenados = sorted(produtos, key=lambda produto: produto["valor"])
+# Inserindo os produtos na listagem de produtos
+for produto in produtos_ordenados:
+    listagem_produtos_treeview.insert("", END, values=(produto["nome"], produto["valor"]))
+Criando a área de cadastro de produtos
+cadastro_frame = Frame(root) cadastro_frame.pack(padx=10, pady=10)
+
+Criando os campos de entrada para cadastro de produtos
+nome_produto_label = Label(cadastro_frame, text="Nome do Produto:") nome_produto_label.pack(side=LEFT)
+
+nome_produto_entry = Entry(cadastro_frame) nome_produto_entry.pack(side=LEFT, fill=X, expand=True)
+
+descricao_produto_label = Label(cadastro_frame, text="Descrição do Produto:") descricao_produto_label.pack(side=TOP, pady=10)
+
+descricao_produto_entry = Text(cadastro_frame) descricao_produto_entry.pack(side=TOP, fill=X, expand=True)
+
+valor_produto_label = Label(cadastro_frame, text="Valor do Produto:") valor_produto_label.pack(side=TOP, pady=10)
+
+valor_produto_entry = Entry(cadastro_frame) valor_produto_entry.pack(side=TOP, fill=X, expand=True)
+
+disponivel_venda_label = Label(cadastro_frame, text="Disponível para Venda:") disponivel_venda_label.pack(side=TOP, pady=10)
+
+disponivel_venda_combobox = ttk.Combobox(cadastro_frame, values=("Sim", "Não")) disponivel_venda_combobox.pack(side=TOP)
+
+Criando o botão para cadastrar um novo produto
+cadastrar_produto_button = Button(cadastro_frame, text="Cadastrar Produto", command=cadastrar_produto) cadastrar_produto_button.pack(pady=10)
+
+Criando a área de listagem de produtos
+listagem_frame = Frame(root) listagem_frame.pack(padx=10, pady=10)
